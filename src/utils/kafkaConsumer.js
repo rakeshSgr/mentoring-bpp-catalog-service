@@ -3,18 +3,25 @@ const { Kafka } = require('kafkajs')
 const kafka = new Kafka({ clientId: process.env.KAFKA_CLIENT_ID, brokers: process.env.KAFKA_BROKERS.split(' ') })
 const consumer = kafka.consumer({ groupId: process.env.KAFKA_CLIENT_ID })
 const { kafkaProducers } = require('@utils/kafkaProducer')
+const { sessionToESTransformer } = require('@utils/sessionTransformer')
 
-exports.consume = async () => {
+consumer.on('consumer.connect', () => console.log('Kafka Consumer Connected'))
+consumer.on('consumer.disconnect', () => console.log('Kafka Consumer Disconnected'))
+//consumer.on('consumer.network.request', (request) => console.log('Kafka Consumer Request: ', request))
+
+exports.initialize = async () => {
 	try {
 		await consumer.connect()
 		await consumer.subscribe({ topics: [process.env.KAFKA_SESSION_TOPIC] })
 		await consumer.run({
-			eachMessage: async ({ message }) => {
+			eachMessage: async ({ topic, /*partition,*/ message }) => {
 				const value = JSON.parse(message.value)
-				console.log('message:', value)
-				const topic = value.topic
-				delete value.topic
-				if (topic === process.env.KAFKA_SESSION_TOPIC) await kafkaProducers.session(value)
+				console.log('CONSUMER MESSAGE: ', value)
+				console.log('CONSUMER TOPIC: ', topic)
+				if (topic === process.env.KAFKA_SESSION_TOPIC) {
+					const elasticSessionObject = await sessionToESTransformer(value)
+					await kafkaProducers.session(elasticSessionObject)
+				}
 			},
 		})
 	} catch (err) {
