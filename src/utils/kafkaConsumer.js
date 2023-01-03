@@ -1,6 +1,14 @@
 'use strict'
 const { Kafka } = require('kafkajs')
-const kafka = new Kafka({ clientId: process.env.KAFKA_CLIENT_ID, brokers: process.env.KAFKA_BROKERS.split(' ') })
+const kafka = new Kafka({
+	clientId: process.env.KAFKA_CLIENT_ID,
+	brokers: process.env.KAFKA_BROKERS.split(' '),
+	connectionTimeout: 60000,
+	retry: {
+		initialRetryTime: 1000,
+		retries: 8,
+	},
+})
 const consumer = kafka.consumer({ groupId: process.env.KAFKA_CLIENT_ID })
 const { kafkaProducers } = require('@utils/kafkaProducer')
 const { sessionToESTransformer } = require('@utils/sessionTransformer')
