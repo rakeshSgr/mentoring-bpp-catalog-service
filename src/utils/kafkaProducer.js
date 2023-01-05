@@ -15,21 +15,22 @@ producer.on('producer.connect', () => console.log('Kafka Producer Connected'))
 producer.on('producer.disconnect', () => console.log('Kafka Producer Disconnected'))
 //producer.on('producer.network.request', (request) => console.log('Producer Request: ', request))
 
-const produce = (topic) => async (data) => {
+const produce = (topic) => async (key, value) => {
 	try {
+		console.log('PRODUCER KEY: ', key)
 		console.log('PRODUCER TOPIC: ', topic)
-		console.log('PRODUCER DATA: ', data)
-		//data.topic = topic
-		//await producer.connect() //Add this back if producer ever gets garbage collected. Unlikely
-		await producer.send({
+		console.log('PRODUCER DATA: ', value)
+		const res = await producer.send({
 			topic,
 			messages: [
 				{
-					value: JSON.stringify(data),
+					key: key,
+					value: JSON.stringify(value),
 				},
 			],
 		})
 		console.log(`${topic.toUpperCase()} Enqueued`)
+		return res
 	} catch (err) {
 		console.error(err)
 	}

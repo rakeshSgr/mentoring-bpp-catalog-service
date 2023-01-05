@@ -21,7 +21,7 @@ exports.sessionToESTransformer = (session) => {
 			},
 		},
 		session: {
-			id: Math.random().toString(36).slice(2),
+			id: session._id,
 			category_id: categoryId,
 			descriptor: {
 				name: session.title,

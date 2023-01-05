@@ -23,12 +23,13 @@ exports.initialize = async () => {
 		await consumer.subscribe({ topics: [process.env.KAFKA_SESSION_TOPIC] })
 		await consumer.run({
 			eachMessage: async ({ topic, /*partition,*/ message }) => {
+				console.log('CONSUMER KEY: ', message.key)
 				const value = JSON.parse(message.value)
-				console.log('CONSUMER MESSAGE: ', value)
+				console.log('CONSUMER VALUE: ', value)
 				console.log('CONSUMER TOPIC: ', topic)
 				if (topic === process.env.KAFKA_SESSION_TOPIC) {
 					const elasticSessionObject = await sessionToESTransformer(value)
-					await kafkaProducers.session(elasticSessionObject)
+					await kafkaProducers.session(message.key, elasticSessionObject)
 				}
 			},
 		})
