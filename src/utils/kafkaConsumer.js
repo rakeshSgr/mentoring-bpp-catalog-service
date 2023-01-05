@@ -29,7 +29,7 @@ exports.initialize = async () => {
 				console.log('CONSUMER TOPIC: ', topic)
 				if (topic === process.env.KAFKA_SESSION_TOPIC) {
 					const elasticSessionObject = await sessionToESTransformer(value)
-					console.log(await kafkaProducers.session(message.key, elasticSessionObject))
+					await kafkaProducers.session(message.key, elasticSessionObject)
 				}
 			},
 		})
