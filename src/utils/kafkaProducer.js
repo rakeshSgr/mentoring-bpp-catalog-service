@@ -19,7 +19,7 @@ const produce = (topic) => async (key, value) => {
 	try {
 		console.log('PRODUCER KEY: ', key)
 		console.log('PRODUCER TOPIC: ', topic)
-		console.log('PRODUCER DATA: ', value)
+		console.log('PRODUCER DATA: ', JSON.stringify(value, null, 4))
 		const res = await producer.send({
 			topic,
 			messages: [
