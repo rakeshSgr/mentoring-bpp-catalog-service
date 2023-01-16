@@ -38,6 +38,9 @@ const produce = (topic) => async (key, value) => {
 
 exports.kafkaProducers = {
 	session: produce(process.env.KAFKA_SESSION_TOPIC_ELASTIC),
+	provider: produce(process.env.KAFKA_PROVIDER_ELASTIC_TOPIC),
+	fulfilment: produce(process.env.KAFKA_FULFILMENT_ELASTIC_TOPIC),
+	agent: produce(process.env.KAFKA_AGENT_ELASTIC_TOPIC),
 }
 
 exports.initialize = () =>
