@@ -19,7 +19,7 @@ const produce = (topic) => async (key, value) => {
 	try {
 		console.log('PRODUCER KEY: ', key)
 		console.log('PRODUCER TOPIC: ', topic)
-		console.log('PRODUCER DATA: ', value)
+		console.log('PRODUCER DATA: ', JSON.stringify(value, null, 4))
 		const res = await producer.send({
 			topic,
 			messages: [
@@ -38,6 +38,9 @@ const produce = (topic) => async (key, value) => {
 
 exports.kafkaProducers = {
 	session: produce(process.env.KAFKA_SESSION_TOPIC_ELASTIC),
+	provider: produce(process.env.KAFKA_PROVIDER_ELASTIC_TOPIC),
+	fulfilment: produce(process.env.KAFKA_FULFILMENT_ELASTIC_TOPIC),
+	agent: produce(process.env.KAFKA_AGENT_ELASTIC_TOPIC),
 }
 
 exports.initialize = () =>

@@ -12,6 +12,10 @@ const kafka = new Kafka({
 const consumer = kafka.consumer({ groupId: process.env.KAFKA_CLIENT_ID })
 const { kafkaProducers } = require('@utils/kafkaProducer')
 const { sessionToESTransformer } = require('@utils/sessionTransformer')
+const transform = require('json-to-json-transformer').transform
+const { sessionTemplate } = require('@constants/sessionTemplate')
+
+const categoryIdExtractor = (categories) => categories.map((category) => category.value)
 
 consumer.on('consumer.connect', () => console.log('Kafka Consumer Connected'))
 consumer.on('consumer.disconnect', () => console.log('Kafka Consumer Disconnected'))
@@ -28,7 +32,8 @@ exports.initialize = async () => {
 				console.log('CONSUMER VALUE: ', value)
 				console.log('CONSUMER TOPIC: ', topic)
 				if (topic === process.env.KAFKA_SESSION_TOPIC) {
-					const elasticSessionObject = await sessionToESTransformer(value)
+					/* const elasticSessionObject = await sessionToESTransformer(value) */
+					const elasticSessionObject = await transform(sessionTemplate, value, { categoryIdExtractor })
 					await kafkaProducers.session(message.key, elasticSessionObject)
 				}
 			},
