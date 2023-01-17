@@ -12,7 +12,7 @@ require('@utils/kafkaConsumer').initialize()
 app.use(bodyParser.urlencoded({ extended: true, limit: '50MB' }))
 app.use(bodyParser.json({ limit: '50MB' }))
 app.use(cors())
-//app.use('/bap', require('@routes'))
+app.use(process.env.ROOT_ROUTE, require('@routes'))
 
 app.listen(process.env.APPLICATION_PORT, (res, err) => {
 	if (err) onError(err)

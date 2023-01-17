@@ -1,6 +1,6 @@
 'use strict'
 
-exports.sessionTemplate = {
+exports.agentTemplate = {
 	agent: {
 		person: {
 			id: '{{mentor._id}}',
