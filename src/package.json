@@ -55,6 +55,7 @@
 		"@utils": "utils",
 		"@tests": "tests",
 		"@middlewares": "middlewares",
-		"@constants": "constants"
+		"@constants": "constants",
+		"@helpers": "helpers"
 	}
 }
