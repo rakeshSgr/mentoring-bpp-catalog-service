@@ -2,8 +2,8 @@
 const transform = require('json-to-json-transformer').transform
 const { sessionTemplate, sessionHandlers } = require('@constants/objectTemplates/session')
 const { fulfillmentTemplate, fulfillmentHandlers } = require('@constants/objectTemplates/fulfillment')
-const providerTemplate = require('@constants/objectTemplates/provider')
-const agentTemplate = require('@constants/objectTemplates/agent')
+const { providerTemplate } = require('@constants/objectTemplates/provider')
+const { agentTemplate } = require('@constants/objectTemplates/agent')
 
 const objectTransformer = (templateObject, handlers) => (inputObject) =>
 	transform(templateObject, inputObject, handlers)
