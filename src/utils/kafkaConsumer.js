@@ -11,11 +11,8 @@ const kafka = new Kafka({
 })
 const consumer = kafka.consumer({ groupId: process.env.KAFKA_CLIENT_ID })
 const { kafkaProducers } = require('@utils/kafkaProducer')
-const { sessionToESTransformer } = require('@utils/sessionTransformer')
-const transform = require('json-to-json-transformer').transform
-const { sessionTemplate } = require('@constants/sessionTemplate')
-
-const categoryIdExtractor = (categories) => categories.map((category) => category.value)
+const { sessionToESTransformer } = require('@helpers/sessionToESTransformer')
+const crypto = require('crypto')
 
 consumer.on('consumer.connect', () => console.log('Kafka Consumer Connected'))
 consumer.on('consumer.disconnect', () => console.log('Kafka Consumer Disconnected'))
@@ -32,9 +29,20 @@ exports.initialize = async () => {
 				console.log('CONSUMER VALUE: ', value)
 				console.log('CONSUMER TOPIC: ', topic)
 				if (topic === process.env.KAFKA_SESSION_TOPIC) {
-					/* const elasticSessionObject = await sessionToESTransformer(value) */
-					const elasticSessionObject = await transform(sessionTemplate, value, { categoryIdExtractor })
-					await kafkaProducers.session(message.key, elasticSessionObject)
+					value.fulfillmentId = crypto.randomUUID()
+					const { agent, fulfillment, session, provider } = sessionToESTransformer(value)
+					Promise.all([
+						kafkaProducers.session(value._id, session),
+						kafkaProducers.fulfillment(value.fulfillmentId, fulfillment),
+						kafkaProducers.agent(value.mentor._id, agent),
+						kafkaProducers.provider(value.organization._id, provider),
+					])
+						.then(() => {
+							console.log('Session Objects Passed To Producer Successfully')
+						})
+						.catch(() => {
+							console.error('Something went wrong while passing session objects')
+						})
 				}
 			},
 		})

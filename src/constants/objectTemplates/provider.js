@@ -1,18 +1,12 @@
 'use strict'
 
-const tempIdGenerator = () => Math.random().toString(36).slice(2)
-
-exports.fieldhandlers = {
-	tempIdGenerator,
-}
-
 exports.providerTemplate = {
 	provider: {
-		id: '=> tempIdGenerator()',
+		id: '{{organization._id}}',
 		descriptor: {
-			name: '{{provider.name}}',
-			code: '{{provider.code}}',
-			short_desc: '{{provider.description}}',
+			name: '{{organization.name}}',
+			code: '{{organization.code}}',
+			short_desc: '{{organization.description}}',
 		},
 		rateable: false,
 	},

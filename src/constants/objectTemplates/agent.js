@@ -10,6 +10,6 @@ exports.sessionTemplate = {
 			},
 			gender: '{{mentor.gender}}',
 		},
-		rating: '{{}}',
+		rating: '{{mentor.rating.average}}',
 	},
 }

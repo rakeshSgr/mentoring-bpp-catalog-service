@@ -1,10 +1,8 @@
 'use strict'
 
-const tempIdGenerator = () => Math.random().toString(36).slice(2)
-const categoryIdExtractor = (categories) => categories.map((category) => category.value)
+const categoryIdExtractor = (categories) => categories.map((category) => category.value.replace(' ', '-'))
 
-exports.fieldhandlers = {
-	tempIdGenerator,
+exports.sessionHandlers = {
 	categoryIdExtractor,
 }
 
@@ -22,6 +20,7 @@ exports.sessionTemplate = {
 	session: {
 		id: '{{_id}}',
 		category_ids: '=> categoryIdExtractor(categories)', //Look for category_ids plural
+		providerId: '{{organization._id}}',
 		descriptor: {
 			name: '{{title}}',
 			code: '{{title}}', //This needs modification
@@ -29,18 +28,25 @@ exports.sessionTemplate = {
 			long_desc: '{{description}}',
 			images: '{{image}}',
 		},
-		fulfillment_ids: ['1'],
+		fulfillment_ids: ['{{fulfillmentId}}'],
 		price: {
 			value: '0',
 		},
 		quantity: {
 			allocated: {
-				count: '10',
+				count: 10,
 			},
 			available: {
-				count: '5',
+				count: 5,
 			},
 		},
-		tags: [{ recommended_for: ['{{recommendedFor}}', '{{label}}'] }],
+		tags: [
+			{
+				display: true,
+				code: 'recommended_for',
+				name: 'recommended_for',
+				list: ['{{recommendedFor}}', { code: '{{value}}', name: '{{label}}' }],
+			},
+		],
 	},
 }
