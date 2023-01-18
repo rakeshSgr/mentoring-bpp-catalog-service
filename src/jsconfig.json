@@ -19,7 +19,8 @@
 			"@validators*": ["./validators*"],
 			"@utils*": ["./utils*"],
             "@helpers*": ["./helpers*"],
-            "@config*": ["./config*"]
+            "@config*": ["./config*"],
+            "@dtos*": ["./dtos*"],
 		}
 	},
 	"exclude": ["node_modules", "@shelf/jest-mongodb"]

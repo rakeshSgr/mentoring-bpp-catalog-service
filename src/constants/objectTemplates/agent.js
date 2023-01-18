@@ -1,15 +1,13 @@
 'use strict'
 
 exports.agentTemplate = {
-	agent: {
-		person: {
-			id: '{{mentor._id}}',
-			name: '{{mentor.name}}',
-			image: {
-				url: '{{mentor.image}}',
-			},
-			gender: '{{mentor.gender}}',
+	person: {
+		id: '{{mentor._id}}',
+		name: '{{mentor.name}}',
+		image: {
+			url: '{{mentor.image}}',
 		},
-		rating: '{{mentor.rating.average}}',
+		gender: '{{mentor.gender}}',
 	},
+	rating: '{{mentor.rating.average}}',
 }
