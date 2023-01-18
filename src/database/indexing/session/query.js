@@ -16,10 +16,37 @@ exports.searchBySessionName = async (sessionName) => {
 	try {
 		const result = await search({
 			match: {
-				'session.descriptor.name': sessionName,
+				'descriptor.name': sessionName,
 			},
 		})
-		//console.log(JSON.stringify(result, null, 4))
+		return result
+	} catch (err) {
+		console.log(err)
+	}
+}
+
+exports.getprotocolObjectsFromSessions = async (sessions) => {
+	try {
+		const result = await Promise.all(
+			sessions.map(async (sessionDoc) => {
+				const session = sessionDoc._source
+				const providerDoc = await exports.getDocById(process.env.ELASTIC_PROVIDER_INDEX, session.providerId)
+				const provider = providerDoc._source
+				const fulfillmentDoc = await exports.getDocById(
+					process.env.ELASTIC_FULFILLMENT_INDEX,
+					session.fulfillment_ids[0]
+				)
+				const fulfillment = fulfillmentDoc._source
+				const agentDoc = await exports.getDocById(process.env.ELASTIC_AGENT_INDEX, fulfillment.agentId)
+				const agent = agentDoc._source
+				return {
+					session,
+					provider,
+					fulfillment,
+					agent,
+				}
+			})
+		)
 		return result
 	} catch (err) {
 		console.log(err)
