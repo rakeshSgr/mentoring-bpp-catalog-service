@@ -53,12 +53,13 @@
 		"@controllers": "controllers",
 		"@database": "database",
 		"@routes": "routes",
-		"@config": "config",
+		"@configs": "configs",
 		"@utils": "utils",
 		"@tests": "tests",
 		"@middlewares": "middlewares",
 		"@constants": "constants",
 		"@helpers": "helpers",
-		"@dtos": "dtos"
+		"@dtos": "dtos",
+		"@services": "services"
 	}
 }

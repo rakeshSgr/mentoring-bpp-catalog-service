@@ -2,7 +2,7 @@
 
 const rfdc = require('rfdc')()
 
-exports.protocolResponse = (protocolObjects) => {
+exports.protocolResponseDTO = async (protocolObjects) => {
 	const catalog = {}
 	catalog.providers = []
 	const addedCategories = new Set()

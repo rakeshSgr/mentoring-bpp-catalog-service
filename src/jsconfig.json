@@ -21,6 +21,7 @@
             "@helpers*": ["./helpers*"],
             "@config*": ["./config*"],
             "@dtos*": ["./dtos*"],
+            "@services":["./services*"]
 		}
 	},
 	"exclude": ["node_modules", "@shelf/jest-mongodb"]
