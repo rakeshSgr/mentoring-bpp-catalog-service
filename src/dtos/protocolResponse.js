@@ -1,15 +1,14 @@
 'use strict'
 
 const rfdc = require('rfdc')()
+const { fulfillmentObjectDTO } = require('@dtos/fulfillmentObject')
 
 exports.protocolResponseDTO = async (protocolObjects) => {
 	const catalog = {}
 	catalog.providers = []
 	const addedCategories = new Set()
-	protocolObjects.map((protocolObject) => {
-		const fulfillment = protocolObject.fulfillment
-		fulfillment.agent = protocolObject.agent
-		delete fulfillment.agentId
+	protocolObjects.map(async (protocolObject) => {
+		const fulfillment = await fulfillmentObjectDTO(protocolObject.fulfillment, protocolObject.agent)
 		const session = protocolObject.session
 		const categories = rfdc(session.categories)
 		delete session.categories

@@ -14,6 +14,9 @@ exports.search = async (req, res) => {
 exports.getFulfillment = async (req, res) => {
 	try {
 		const fulfillmentId = req.params.fulfillmentId
+		console.log('fulfillment ID: ', fulfillmentId)
+		const fulfillment = await searchService.getFulfillment(fulfillmentId)
+		await res.status(200).send({ fulfillment })
 	} catch (err) {
 		console.log(err)
 	}
