@@ -1,22 +1,44 @@
 'use strict'
 const sessionQueries = require('@database/indexing/session/queries')
+const agentQueries = require('@database/indexing/agent/queries')
 const { getprotocolObjectsFromSessions } = require('@helpers/sessionsToProtocolObjects')
 const { getFulfillmentAndAgentObjects } = require('@helpers/fulfillmentAndAgentObjects')
 const { protocolResponseDTO } = require('@dtos/protocolResponse')
 const { fulfillmentObjectDTO } = require('@dtos/fulfillmentObject')
+const { getCount, getDocs, getSourceObject, flattenArrayOfArrays } = require('@utils/generic')
+
+const searchByPersonName = async (requestBody) => {
+	const personName = requestBody.intent.agent.person.name
+	const result = await agentQueries.findByName(personName)
+	if (!getCount(result)) return null
+	const agentDocs = getDocs(result)
+	const sessionsArray = await Promise.all(
+		agentDocs.map(async (agentDoc) => {
+			const agent = getSourceObject(agentDoc)
+			const sessionsResult = await sessionQueries.findByAgentId(agent.person.id)
+			if (!getCount(sessionsResult)) return []
+			else return getDocs(sessionsResult)
+		})
+	)
+	return await flattenArrayOfArrays(sessionsArray)
+}
 
 exports.search = async (requestBody) => {
-	const sessionName = requestBody.intent.item.descriptor.name
-	const sessionDocs = await sessionQueries.findByName(sessionName)
-	if (!sessionDocs.hits.total.value) return null
-	const sessions = sessionDocs.hits.hits
-	const protocolObjects = await getprotocolObjectsFromSessions(sessions)
+	let sessionDocs
+	if (requestBody.intent.item?.descriptor?.name) {
+		const sessionName = requestBody.intent.item.descriptor.name
+		const result = await sessionQueries.findByName(sessionName)
+		if (!getCount(result)) return null
+		sessionDocs = getDocs(result)
+	} else if (requestBody.intent.agent?.person?.name) {
+		sessionDocs = await searchByPersonName(requestBody)
+	}
+	const protocolObjects = sessionDocs ? await getprotocolObjectsFromSessions(sessionDocs) : null
+	//Handle these cases where any of the elasticsearch results can turn up empty.
 	return await protocolResponseDTO(protocolObjects)
 }
 
 exports.getFulfillment = async (fulfillmentId) => {
 	const { fulfillment, agent } = await getFulfillmentAndAgentObjects(fulfillmentId)
-	console.log('fulfillment: ', fulfillment)
-	console.log('agent: ', agent)
 	return await fulfillmentObjectDTO(fulfillment, agent)
 }

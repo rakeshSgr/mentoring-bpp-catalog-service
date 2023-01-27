@@ -13,6 +13,7 @@ exports.protocolResponseDTO = async (protocolObjects) => {
 		const categories = rfdc(session.categories)
 		delete session.categories
 		delete session.providerId
+		delete session.agentId
 		const selectedProvider = catalog.providers.find((provider) => provider.id === protocolObject.provider.id)
 		if (!selectedProvider) {
 			catalog.providers.push({

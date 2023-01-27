@@ -20,6 +20,7 @@ exports.sessionTemplate = {
 	],
 	category_ids: '=> categoryIdExtractor(categories)', //Look for category_ids plural
 	providerId: '{{organization._id}}',
+	agentId: '{{mentor._id}}',
 	descriptor: {
 		name: '{{title}}',
 		code: '{{title}}', //This needs modification
