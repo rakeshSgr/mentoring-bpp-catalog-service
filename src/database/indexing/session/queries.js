@@ -8,19 +8,34 @@ const search = async (query) => {
 	})
 }
 
-exports.findById = async (id) => {
+const findById = async (id) => {
 	return await client.get({ index: process.env.ELASTIC_SESSION_INDEX, id })
 }
 
-exports.findByName = async (sessionName) => {
+const findByName = async (sessionName) => {
 	try {
-		const result = await search({
+		return await search({
 			match: {
 				'descriptor.name': sessionName,
 			},
 		})
-		return result
 	} catch (err) {
 		console.log(err)
 	}
 }
+
+const findByAgentId = async (agentId) => {
+	try {
+		return await search({
+			match: {
+				agentId: agentId,
+			},
+		})
+	} catch (err) {
+		console.log(err)
+	}
+}
+
+const sessionQueries = { findById, findByName, findByAgentId }
+
+module.exports = sessionQueries
