@@ -21,3 +21,14 @@ exports.getFulfillment = async (req, res) => {
 		console.log(err)
 	}
 }
+
+exports.getSession = async (req, res) => {
+	try {
+		const sessionId = req.params.sessionId
+		const getAllProtocolObjects = req.query.getAllComponents === 'true' ? true : false
+		const session = await searchService.getSession(sessionId, getAllProtocolObjects)
+		await res.status(200).send({ session })
+	} catch (err) {
+		console.log(err)
+	}
+}
