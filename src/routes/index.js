@@ -6,5 +6,6 @@ const catalogController = require('@controllers/')
 router.use(authVerifier) */
 router.post('/search', catalogController.search)
 router.get('/get-fulfillment/:fulfillmentId', catalogController.getFulfillment)
+router.get('/get-session/:sessionId', catalogController.getSession)
 
 module.exports = router

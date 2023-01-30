@@ -42,3 +42,12 @@ exports.getFulfillment = async (fulfillmentId) => {
 	const { fulfillment, agent } = await getFulfillmentAndAgentObjects(fulfillmentId)
 	return await fulfillmentObjectDTO(fulfillment, agent)
 }
+
+exports.getSession = async (sessionId, getAllProtocolObjects) => {
+	const result = await sessionQueries.findById(sessionId)
+	if (!result.found) return null
+	if (!getAllProtocolObjects) return getSourceObject(result)
+	const protocolObjects = await getprotocolObjectsFromSessions([result])
+	console.log(protocolObjects)
+	return await protocolResponseDTO(protocolObjects)
+}
