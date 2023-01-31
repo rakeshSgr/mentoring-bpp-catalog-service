@@ -32,3 +32,15 @@ exports.getSession = async (req, res) => {
 		console.log(err)
 	}
 }
+
+exports.getStatusBody = async (req, res) => {
+	try {
+		const sessionId = req.params.sessionId
+		const fulfillmentId = req.params.fulfillmentId
+		if (!fulfillmentId || !sessionId) return res.status(400).send({ message: 'Missing Parameters' })
+		let statusBody = await searchService.getStatusBody(sessionId, fulfillmentId)
+		await res.status(200).send({ statusBody })
+	} catch (err) {
+		console.log(err)
+	}
+}

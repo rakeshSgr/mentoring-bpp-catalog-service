@@ -1,6 +1,7 @@
 'use strict'
 const providerQueries = require('@database/indexing/provider/queries')
 const { getFulfillmentAndAgentObjects } = require('@helpers/fulfillmentAndAgentObjects')
+const { getSourceObject } = require('@utils/generic')
 
 exports.getprotocolObjectsFromSessions = async (sessions) => {
 	try {
@@ -19,6 +20,23 @@ exports.getprotocolObjectsFromSessions = async (sessions) => {
 			})
 		)
 		return result
+	} catch (err) {
+		console.log(err)
+		throw err
+	}
+}
+
+exports.getStatusObjectsFromSession = async (sessionDoc, fulfillmentId) => {
+	try {
+		const session = getSourceObject(sessionDoc)
+		const providerDoc = await providerQueries.findById(session.providerId)
+		const { fulfillment, agent } = await getFulfillmentAndAgentObjects(fulfillmentId)
+		return {
+			session,
+			providerDoc,
+			fulfillment,
+			agent,
+		}
 	} catch (err) {
 		console.log(err)
 		throw err
