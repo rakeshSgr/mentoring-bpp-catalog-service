@@ -1,7 +1,7 @@
 'use strict'
 const sessionQueries = require('@database/indexing/session/queries')
 const agentQueries = require('@database/indexing/agent/queries')
-const { getprotocolObjectsFromSessions } = require('@helpers/sessionsToProtocolObjects')
+const { getprotocolObjectsFromSessions, getStatusObjectsFromSession } = require('@helpers/sessionsToProtocolObjects')
 const { getFulfillmentAndAgentObjects } = require('@helpers/fulfillmentAndAgentObjects')
 const { protocolResponseDTO } = require('@dtos/protocolResponse')
 const { fulfillmentObjectDTO } = require('@dtos/fulfillmentObject')
@@ -44,10 +44,21 @@ exports.getFulfillment = async (fulfillmentId) => {
 }
 
 exports.getSession = async (sessionId, getAllProtocolObjects) => {
-	const result = await sessionQueries.findById(sessionId)
-	if (!result.found) return null
-	if (!getAllProtocolObjects) return getSourceObject(result)
-	const protocolObjects = await getprotocolObjectsFromSessions([result])
+	const sessionDoc = await sessionQueries.findById(sessionId)
+	if (!sessionDoc.found) return null
+	if (!getAllProtocolObjects) return getSourceObject(sessionDoc)
+	const protocolObjects = await getprotocolObjectsFromSessions([sessionDoc])
 	console.log(protocolObjects)
 	return await protocolResponseDTO(protocolObjects)
+}
+
+exports.getStatusBody = async (sessionId, fulfillmentId) => {
+	try {
+		const sessionDoc = await sessionQueries.findById(sessionId)
+		if (!sessionDoc.found) return null
+		const statusObjects = await getStatusObjectsFromSession(sessionDoc, fulfillmentId)
+		return await protocolResponseDTO([statusObjects])
+	} catch (err) {
+		console.log(err)
+	}
 }
