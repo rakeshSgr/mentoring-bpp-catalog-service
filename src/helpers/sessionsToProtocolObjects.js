@@ -30,10 +30,11 @@ exports.getStatusObjectsFromSession = async (sessionDoc, fulfillmentId) => {
 	try {
 		const session = getSourceObject(sessionDoc)
 		const providerDoc = await providerQueries.findById(session.providerId)
+		const provider = getSourceObject(providerDoc)
 		const { fulfillment, agent } = await getFulfillmentAndAgentObjects(fulfillmentId)
 		return {
 			session,
-			providerDoc,
+			provider,
 			fulfillment,
 			agent,
 		}
