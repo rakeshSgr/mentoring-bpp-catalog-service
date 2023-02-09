@@ -1,10 +1,10 @@
 'use strict'
-const { objectTransformers } = require('@utils/objectTransformer')
+const { objectTransformers } = require('@helpers/objectTransformers')
 
-exports.sessionToESTransformer = (sessionObject) => {
-	const agent = objectTransformers.agent(sessionObject)
-	const fulfillment = objectTransformers.fulfillment(sessionObject)
-	const session = objectTransformers.session(sessionObject)
-	const provider = objectTransformers.provider(sessionObject)
+exports.sessionToESTransformer = async (sessionObject) => {
+	const agent = await objectTransformers.agent(sessionObject)
+	const fulfillment = await objectTransformers.fulfillment(sessionObject)
+	const session = await objectTransformers.session(sessionObject)
+	const provider = await objectTransformers.provider(sessionObject)
 	return { agent, fulfillment, session, provider }
 }
