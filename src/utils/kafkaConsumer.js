@@ -1,29 +1,16 @@
 'use strict'
-const { Kafka } = require('kafkajs')
-const kafka = new Kafka({
-	clientId: process.env.KAFKA_CLIENT_ID,
-	brokers: process.env.KAFKA_BROKERS.split(' '),
-	connectionTimeout: 60000,
-	retry: {
-		initialRetryTime: 1000,
-		retries: 8,
-	},
-})
-const consumer = kafka.consumer({ groupId: process.env.KAFKA_CLIENT_ID })
+const { consumer } = require('@configs/kafka')
+
 const { kafkaProducers } = require('@utils/kafkaProducer')
 const { sessionToESTransformer } = require('@helpers/sessionToESTransformer')
 const crypto = require('crypto')
-
-consumer.on('consumer.connect', () => console.log('Kafka Consumer Connected'))
-consumer.on('consumer.disconnect', () => console.log('Kafka Consumer Disconnected'))
-//consumer.on('consumer.network.request', (request) => console.log('Kafka Consumer Request: ', request))
 
 exports.initialize = async () => {
 	try {
 		await consumer.connect()
 		await consumer.subscribe({ topics: [process.env.KAFKA_SESSION_TOPIC] })
 		await consumer.run({
-			eachMessage: async ({ topic, /*partition,*/ message }) => {
+			eachMessage: async ({ topic, message }) => {
 				console.log('CONSUMER KEY: ', message.key)
 				const value = JSON.parse(message.value)
 				console.log('CONSUMER VALUE: ', value)
