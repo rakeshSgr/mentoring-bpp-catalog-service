@@ -1,6 +1,5 @@
 'use strict'
 const { Kafka } = require('kafkajs')
-console.log('KAFKA CONFIG FILE')
 const kafkaClient = new Kafka({
 	clientId: process.env.KAFKA_CLIENT_ID,
 	brokers: process.env.KAFKA_BROKERS.split(','),

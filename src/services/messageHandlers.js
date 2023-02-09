@@ -1,5 +1,4 @@
 'use strict'
-console.log('MESSAGE HANDLERS FILE')
 const crypto = require('crypto')
 const { sessionToESTransformer } = require('@helpers/sessionToESTransformer')
 const { kafkaProducers } = require('@helpers/kafkaProducers')
