@@ -3,10 +3,10 @@ const crypto = require('crypto')
 const { sessionToESTransformer } = require('@helpers/sessionToESTransformer')
 const { kafkaProducers } = require('@helpers/kafkaProducers')
 
-const sessionCreation = (value) => {
+const sessionCreation = async (value) => {
 	try {
 		value.fulfillmentId = crypto.randomUUID()
-		const { agent, fulfillment, session, provider } = sessionToESTransformer(value)
+		const { agent, fulfillment, session, provider } = await sessionToESTransformer(value)
 		Promise.all([
 			kafkaProducers.session(value._id, session),
 			kafkaProducers.fulfillment(value.fulfillmentId, fulfillment),
