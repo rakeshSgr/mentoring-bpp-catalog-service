@@ -2,7 +2,7 @@
 console.log('MESSAGE HANDLERS FILE')
 const crypto = require('crypto')
 const { sessionToESTransformer } = require('@helpers/sessionToESTransformer')
-const { kafkaProducers } = require('@utils/kafkaProducer')
+const { kafkaProducers } = require('@helpers/kafkaProducers')
 
 const sessionCreation = (value) => {
 	try {
