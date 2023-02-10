@@ -26,7 +26,11 @@ exports.sessionTemplate = {
 		code: '{{title}}', //This needs modification
 		short_desc: '{{description}}',
 		long_desc: '{{description}}',
-		images: '{{image}}',
+		images: [
+			{
+				url: '{{image}}',
+			},
+		],
 	},
 	fulfillment_ids: ['{{fulfillmentId}}'],
 	price: {
