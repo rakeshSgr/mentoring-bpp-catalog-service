@@ -6,6 +6,8 @@ const { kafkaProducers } = require('@helpers/kafkaProducers')
 const sessionCreation = async (value) => {
 	try {
 		value.fulfillmentId = crypto.randomUUID()
+		const sessionImage = value.image[0]
+		value.image = sessionImage //Refactor this away as soon as possible. Band-aid Solution
 		const { agent, fulfillment, session, provider } = await sessionToESTransformer(value)
 		Promise.all([
 			kafkaProducers.session(value._id, session),
