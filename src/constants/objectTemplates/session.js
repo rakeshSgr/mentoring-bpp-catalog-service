@@ -47,9 +47,19 @@ exports.sessionTemplate = {
 	tags: [
 		{
 			display: true,
-			code: 'recommended_for',
-			name: 'recommended_for',
-			list: ['{{recommendedFor}}', { code: '{{value}}', name: '{{label}}' }],
+			descriptor: {
+				code: 'recommended_for',
+				name: 'recommended_for',
+			},
+			list: [
+				'{{recommendedFor}}',
+				{
+					descriptor: {
+						code: '{{value}}',
+						name: '{{label}}',
+					},
+				},
+			],
 		},
 	],
 }
