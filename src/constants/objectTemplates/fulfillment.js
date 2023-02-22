@@ -14,15 +14,33 @@ exports.fulfillmentTemplate = {
 	tags: [
 		{
 			display: false,
-			code: 'status',
-			name: 'status',
-			list: [{ code: 'live', name: 'Live' }],
+			descriptor: {
+				code: 'status',
+				name: 'status',
+			},
+			list: [
+				{
+					descriptor: {
+						code: 'live',
+						name: 'Live',
+					},
+				},
+			],
 		},
 		{
 			display: false,
-			code: 'timeZone',
-			name: 'timeZone',
-			list: [{ code: '{{timeZone}}', name: '{{timeZone}}' }],
+			descriptor: {
+				code: 'timeZone',
+				name: 'timeZone',
+			},
+			list: [
+				{
+					descriptor: {
+						code: '{{timeZone}}',
+						name: '{{timeZone}}',
+					},
+				},
+			],
 		},
 	],
 	time: {
