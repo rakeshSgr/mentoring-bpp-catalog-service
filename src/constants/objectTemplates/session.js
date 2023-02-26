@@ -122,7 +122,7 @@ exports.sessionTemplate = {
 		name: '{{title}}',
 		code: '{{title}}', //This needs modification
 		short_desc: '{{description}}',
-		long_desc: '{{description}}',
+		long_desc: '{{summary}}',
 		images: [
 			{
 				url: '{{image}}',
